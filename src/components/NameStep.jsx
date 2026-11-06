@@ -38,7 +38,7 @@ export default function NameStep({ onNext }) {
               setName(e.target.value)
               if (error) setError(false)
             }}
-            placeholder="..."
+            placeholder="Isi Ini"
             className={`name-input ${error ? 'input-error' : ''}`}
             maxLength={25}
             autoFocus
