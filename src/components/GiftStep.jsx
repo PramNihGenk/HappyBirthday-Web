@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { playGiftOpenSound, triggerConfetti } from '../utils/effects'
 
-export default function GiftStep({ userName, onOpen }) {
+export default function GiftStep({ userName, person, onOpen }) {
   const [isOpening, setIsOpening] = useState(false)
+  const isMale = person?.gender === 'male'
+  const displayName = person?.name || userName
 
   const handleOpenGift = () => {
     if (isOpening) return
@@ -10,7 +12,6 @@ export default function GiftStep({ userName, onOpen }) {
     playGiftOpenSound()
     triggerConfetti()
 
-    // Smooth delay so user can enjoy the opening animation & confetti
     setTimeout(() => {
       onOpen()
     }, 1200)
@@ -19,7 +20,7 @@ export default function GiftStep({ userName, onOpen }) {
   return (
     <div className="step-card gift-card">
       <div className="card-top-badge">
-        <span>🎁 Khusus Buat {userName}</span>
+        <span>🎁 Khusus Buat {displayName}</span>
       </div>
 
       <h2 className="gift-title">Ada kado kecil untukmu!</h2>
@@ -61,7 +62,13 @@ export default function GiftStep({ userName, onOpen }) {
         disabled={isOpening}
         className="btn-sweet-primary"
       >
-        <span>{isOpening ? 'Membuka Kado... 🎉' : 'Buka Kadonya 🎀'}</span>
+        <span>
+          {isOpening
+            ? 'Membuka Kado... 🎉'
+            : isMale
+              ? 'Buka Kadonya ⚡'
+              : 'Buka Kadonya 🎀'}
+        </span>
       </button>
     </div>
   )

@@ -1,18 +1,23 @@
 import { useState } from 'react'
-import NameStep from './components/NameStep'
+import SelectPerson from './components/SelectPerson'
 import GiftStep from './components/GiftStep'
 import WishesStep from './components/WishesStep'
 import CandleStep from './components/CandleStep'
 import ClosingStep from './components/ClosingStep'
+import QATestingPanel from './components/QATestingPanel'
 
-const STEPS = ['name', 'gift', 'wishes', 'candle', 'closing']
+const STEPS = ['select', 'gift', 'wishes', 'candle', 'closing']
 
 export default function App() {
-  const [currentStep, setCurrentStep] = useState('name')
-  const [userName, setUserName] = useState('')
+  const [currentStep, setCurrentStep] = useState('select')
+  const [selectedPerson, setSelectedPerson] = useState(null)
+  const [mockDate, setMockDate] = useState(null)
 
-  const handleNameSubmit = (name) => {
-    setUserName(name)
+  const theme = selectedPerson?.gender || 'female'
+  const userName = selectedPerson?.name || ''
+
+  const handleSelectPerson = (person) => {
+    setSelectedPerson(person)
     setCurrentStep('gift')
   }
 
@@ -29,24 +34,42 @@ export default function App() {
   }
 
   const handleRestart = () => {
-    setCurrentStep('gift') // Let them keep their name or restart with gift
+    setCurrentStep('select')
+    setSelectedPerson(null)
+    setMockDate(null)
   }
 
   const stepIndex = STEPS.indexOf(currentStep)
 
+  const femaleParticles = [
+    { emoji: '💖', className: 'p1' },
+    { emoji: '🌸', className: 'p2' },
+    { emoji: '⭐', className: 'p3' },
+    { emoji: '💗', className: 'p4' },
+    { emoji: '✨', className: 'p5' },
+  ]
+
+  const maleParticles = [
+    { emoji: '⚡', className: 'p1' },
+    { emoji: '🌟', className: 'p2' },
+    { emoji: '🚀', className: 'p3' },
+    { emoji: '💫', className: 'p4' },
+    { emoji: '✨', className: 'p5' },
+  ]
+
+  const particles = theme === 'female' ? femaleParticles : maleParticles
+
   return (
-    <div className="sweet-app">
-      {/* Background soft ambient gradient & glow */}
+    <div className="sweet-app" data-theme={theme}>
+      {/* Background ambient glows */}
       <div className="ambient-glow glow-top" />
       <div className="ambient-glow glow-bottom" />
 
-      {/* Floating Sparkles in Background */}
+      {/* Floating Particles */}
       <div className="ambient-particles" aria-hidden="true">
-        <span className="particle p1">✨</span>
-        <span className="particle p2">🌸</span>
-        <span className="particle p3">⭐</span>
-        <span className="particle p4">🌷</span>
-        <span className="particle p5">✨</span>
+        {particles.map((p, i) => (
+          <span key={i} className={`particle ${p.className}`}>{p.emoji}</span>
+        ))}
       </div>
 
       <div className="app-container">
@@ -61,29 +84,46 @@ export default function App() {
           ))}
         </div>
 
-        {/* Dynamic Content based on currentStep */}
+        {/* Dynamic Content */}
         <main className="step-content">
-          {currentStep === 'name' && (
-            <NameStep onNext={handleNameSubmit} />
+          {currentStep === 'select' && (
+            <SelectPerson onSelectPerson={handleSelectPerson} mockDate={mockDate} />
           )}
 
           {currentStep === 'gift' && (
-            <GiftStep userName={userName} onOpen={handleOpenGift} />
+            <GiftStep userName={userName} person={selectedPerson} onOpen={handleOpenGift} />
           )}
 
           {currentStep === 'wishes' && (
-            <WishesStep userName={userName} onNext={handleWishesNext} />
+            <WishesStep userName={userName} person={selectedPerson} onNext={handleWishesNext} />
           )}
 
           {currentStep === 'candle' && (
-            <CandleStep userName={userName} onNext={handleCandleNext} />
+            <CandleStep userName={userName} person={selectedPerson} onNext={handleCandleNext} />
           )}
 
           {currentStep === 'closing' && (
-            <ClosingStep userName={userName} onRestart={handleRestart} />
+            <ClosingStep userName={userName} person={selectedPerson} onRestart={handleRestart} />
           )}
         </main>
       </div>
+
+      {/* QC & QA Testing Console Widget */}
+      <QATestingPanel
+        currentStep={currentStep}
+        onStepChange={(s) => setCurrentStep(s)}
+        selectedPerson={selectedPerson}
+        onPersonSelect={(p) => {
+          setSelectedPerson(p)
+          if (currentStep === 'select') {
+            // keep on current or let them teleport
+          }
+        }}
+        theme={theme}
+        mockDate={mockDate}
+        onMockDateChange={(d) => setMockDate(d)}
+        onReset={handleRestart}
+      />
     </div>
   )
 }

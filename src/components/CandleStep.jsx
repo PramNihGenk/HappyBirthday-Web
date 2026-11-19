@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { playBlowSound, triggerConfetti } from '../utils/effects'
 
-export default function CandleStep({ userName, onNext }) {
+export default function CandleStep({ userName, person, onNext }) {
   const [isBlown, setIsBlown] = useState(false)
+  const isMale = person?.gender === 'male'
+  const displayName = person?.name || userName
 
   const handleBlowCandle = () => {
     if (isBlown) return
@@ -20,7 +22,7 @@ export default function CandleStep({ userName, onNext }) {
       <h2 className="candle-title">Waktunya Tiup Lilin! 🎂</h2>
       <p className="candle-subtitle">
         {!isBlown
-          ? 'Pejamkan mata, buat satu harapan baik dalam hatimu, lalu klik tombol atau kuenya untuk meniup lilinnya:'
+          ? 'Pejamkan mata, buat satu harapan baik dalam hatimu, lalu klik kuenya untuk meniup lilinnya:'
           : 'Horeee! Harapanmu sudah ditiupkan ke semesta ✨'}
       </p>
 
@@ -69,11 +71,12 @@ export default function CandleStep({ userName, onNext }) {
       {isBlown && (
         <div className="celebration-banner-box">
           <h1 className="celebration-title">
-            🎉 Happy Birthday {userName}! 
+            🎉 Happy Birthday {displayName}! {isMale ? '⚡' : '🌸'}
           </h1>
           <p className="celebration-desc">
-            Semoga hari ulang tahun ini menjadi awal dari babak baru yang penuh tawa,
-            kesehatan yang prima, dan kejutan-kejutan membahagiakan buat kamu! 🌸
+            {!isMale
+              ? 'Semoga hari ulang tahun ini menjadi awal dari babak baru yang penuh tawa, kesehatan yang prima, dan kejutan-kejutan membahagiakan buat kamu! 🌸'
+              : 'Semoga di usia yang baru ini makin berkah, langkah makin mantap, sukses besar selalu menyertai, dan hari-harimu penuh kemenangan! 🚀'}
           </p>
         </div>
       )}
