@@ -143,9 +143,9 @@ export default function DashboardSidebarRight({
         {/* Ambient BGM Bar */}
         <div className="bgm-player-row">
           <div className="bgm-info">
-            <span className="bgm-label">Music Box Synthesizer</span>
+            <span className="bgm-label">🎶 Birthday Playlist</span>
             <span className="bgm-status">
-              {bgmActive ? 'Sedang Memutar Melodi 🎶' : 'Sedang Dijeda ⏸'}
+              {bgmActive ? 'Sedang Memutar Lagu 🎶' : 'Sedang Dijeda ⏸'}
             </span>
           </div>
           <button

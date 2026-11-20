@@ -2,6 +2,7 @@
  * effects.js — Sweet sound effects and confetti generator
  * Uses Web Audio API for zero-dependency, reliable sounds.
  */
+import bgmAudioUrl from '../assets/bgm.mp3'
 
 let audioCtx = null
 
@@ -110,76 +111,103 @@ export function triggerConfetti() {
 }
 
 // ----------------------------------------------------
-// Ambient Lo-fi Music Box Melody Generator
+// Ambient Background Music (BGM)
+// Plays custom celebration audio track
 // ----------------------------------------------------
-let bgmInterval = null
+
+let bgmAudio = null
 let bgmIsPlaying = false
+const bgmListeners = new Set()
+
+function getBgmAudio() {
+  if (typeof window === 'undefined') return null
+  if (!bgmAudio) {
+    bgmAudio = new Audio(bgmAudioUrl || '/bgm.mp3')
+    bgmAudio.loop = true
+    bgmAudio.volume = 0.55
+
+    bgmAudio.addEventListener('play', () => {
+      bgmIsPlaying = true
+      notifyBgmListeners(true)
+    })
+    bgmAudio.addEventListener('pause', () => {
+      bgmIsPlaying = false
+      notifyBgmListeners(false)
+    })
+    bgmAudio.addEventListener('ended', () => {
+      bgmAudio.currentTime = 0
+      bgmAudio.play().catch(() => {})
+    })
+  }
+  return bgmAudio
+}
+
+function notifyBgmListeners(state) {
+  bgmListeners.forEach((listener) => {
+    try {
+      listener(state)
+    } catch (e) {
+      console.error('BGM listener error:', e)
+    }
+  })
+}
+
+export function subscribeBGM(listener) {
+  if (typeof listener === 'function') {
+    bgmListeners.add(listener)
+    // Notify immediately with current state
+    listener(bgmIsPlaying)
+    return () => bgmListeners.delete(listener)
+  }
+  return () => {}
+}
 
 export function isBGMPlaying() {
   return bgmIsPlaying
 }
 
 export function startAmbientBGM(onStateChange = null) {
-  const ctx = getAudioCtx()
-  if (!ctx) return false
-  if (bgmIsPlaying) return true
+  if (onStateChange) bgmListeners.add(onStateChange)
+  const audio = getBgmAudio()
+  if (!audio) return false
 
-  bgmIsPlaying = true
-  if (onStateChange) onStateChange(true)
-
-  // Calming celebratory music box pattern: C major pentatonic notes
-  // C4, D4, E4, G4, A4, C5, D5, E5, G5
-  const notes = [
-    523.25, 659.25, 783.99, 1046.50, // C5, E5, G5, C6
-    587.33, 698.46, 880.00, 1174.66, // D5, F5, A5, D6
-    659.25, 783.99, 987.77, 1318.51, // E5, G5, B5, E6
-    523.25, 783.99, 1046.50, 1567.98 // C5, G5, C6, G6
-  ]
-  let noteIdx = 0
-
-  const playNextNote = () => {
-    if (!bgmIsPlaying) return
-    const freq = notes[noteIdx % notes.length]
-    noteIdx++
-
-    const now = ctx.currentTime
-    const osc = ctx.createOscillator()
-    const gain = ctx.createGain()
-
-    osc.type = 'sine'
-    osc.frequency.setValueAtTime(freq, now)
-
-    // Soft music-box bell envelope
-    gain.gain.setValueAtTime(0.045, now)
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2)
-
-    osc.connect(gain)
-    gain.connect(ctx.destination)
-
-    osc.start(now)
-    osc.stop(now + 1.2)
+  const playPromise = audio.play()
+  if (playPromise !== undefined) {
+    playPromise
+      .then(() => {
+        bgmIsPlaying = true
+        notifyBgmListeners(true)
+      })
+      .catch((err) => {
+        console.warn('Autoplay prevented or playback issue:', err)
+        bgmIsPlaying = false
+        notifyBgmListeners(false)
+      })
   }
-
-  playNextNote()
-  bgmInterval = setInterval(playNextNote, 620)
   return true
 }
 
 export function stopAmbientBGM(onStateChange = null) {
-  bgmIsPlaying = false
-  if (bgmInterval) {
-    clearInterval(bgmInterval)
-    bgmInterval = null
+  if (onStateChange) bgmListeners.add(onStateChange)
+  const audio = getBgmAudio()
+  if (audio) {
+    audio.pause()
   }
-  if (onStateChange) onStateChange(false)
+  bgmIsPlaying = false
+  notifyBgmListeners(false)
 }
 
 export function toggleAmbientBGM(onStateChange = null) {
-  if (bgmIsPlaying) {
+  if (onStateChange) bgmListeners.add(onStateChange)
+  const audio = getBgmAudio()
+  if (!audio) return false
+
+  if (bgmIsPlaying && !audio.paused) {
     stopAmbientBGM(onStateChange)
     return false
   } else {
-    return startAmbientBGM(onStateChange)
+    startAmbientBGM(onStateChange)
+    return true
   }
 }
 

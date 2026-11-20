@@ -149,8 +149,8 @@ export default function SettingsModal({
             </h4>
             <div className="settings-row-toggle">
               <div className="toggle-info">
-                <strong>Musik Ambient Box (Lofi Synthesizer)</strong>
-                <span>Melodi manis lembut yang dimainkan dengan Web Audio synthesizer</span>
+                <strong>Musik Ambient (Birthday Playlist)</strong>
+                <span>Lagu spesial yang diputar sebagai musik latar perayaan</span>
               </div>
               <button
                 type="button"
