@@ -142,7 +142,7 @@ export default function WishesStep({ userName, person, onNext }) {
                 </g>
               </svg>
             ) : (
-              /* SVG Illustrated Cyber Victory Trophy for Male */
+              /* SVG Illustrated Artisan Golden Trophy for Male */
               <svg
                 viewBox="0 0 240 320"
                 className="trophy-svg"
@@ -150,50 +150,50 @@ export default function WishesStep({ userName, person, onNext }) {
               >
                 <defs>
                   <linearGradient id="cyberGold" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#fff3b0" />
-                    <stop offset="50%" stopColor="#ffd700" />
-                    <stop offset="100%" stopColor="#ff9900" />
+                    <stop offset="0%" stopColor="#fff8db" />
+                    <stop offset="50%" stopColor="#f5c76c" />
+                    <stop offset="100%" stopColor="#dca03c" />
                   </linearGradient>
                   <linearGradient id="cyberNeon" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#00f0ff" />
-                    <stop offset="100%" stopColor="#0077ff" />
+                    <stop offset="0%" stopColor="#88b78f" />
+                    <stop offset="100%" stopColor="#47774d" />
                   </linearGradient>
                 </defs>
 
-                {/* Glowing Aura Rings */}
-                <circle cx="120" cy="130" r="85" fill="none" stroke="#00f0ff" strokeWidth="1.5" strokeDasharray="6 6" opacity="0.4" />
-                <circle cx="120" cy="130" r="105" fill="none" stroke="#0088ff" strokeWidth="1" strokeDasharray="12 8" opacity="0.25" />
+                {/* Glowing Aura Rings with Botanical Laurel Touch */}
+                <circle cx="120" cy="130" r="85" fill="none" stroke="#78af80" strokeWidth="1.5" strokeDasharray="6 6" opacity="0.4" />
+                <circle cx="120" cy="130" r="105" fill="none" stroke="#f5c76c" strokeWidth="1" strokeDasharray="10 8" opacity="0.3" />
 
-                {/* Base / Pedestal */}
-                <polygon points="50,295 190,295 180,265 60,265" fill="#0f192b" stroke="#00f0ff" strokeWidth="2" />
-                <polygon points="70,265 170,265 162,235 78,235" fill="#162744" stroke="#00d4ff" strokeWidth="1.5" />
-                <rect x="85" y="272" width="70" height="15" rx="3" fill="#00f0ff" fillOpacity="0.15" stroke="#00f0ff" strokeWidth="1" />
-                <text x="120" y="283" textAnchor="middle" fill="#00f0ff" fontSize="9" fontWeight="bold" letterSpacing="1">VICTORY</text>
+                {/* Base / Pedestal (Ivory Ceramic & Gold Trim) */}
+                <polygon points="50,295 190,295 180,265 60,265" fill="#2d3a2f" stroke="#f5c76c" strokeWidth="2" />
+                <polygon points="70,265 170,265 162,235 78,235" fill="#3c4e3f" stroke="#78af80" strokeWidth="1.5" />
+                <rect x="85" y="272" width="70" height="15" rx="3" fill="#f5c76c" fillOpacity="0.2" stroke="#f5c76c" strokeWidth="1" />
+                <text x="120" y="283" textAnchor="middle" fill="#f5c76c" fontSize="9" fontWeight="bold" letterSpacing="1">BEST BRO</text>
 
                 {/* Stem Column */}
-                <path d="M 108,235 L 114,195 L 126,195 L 132,235 Z" fill="#0b1320" stroke="#00f0ff" strokeWidth="1.5" />
+                <path d="M 108,235 L 114,195 L 126,195 L 132,235 Z" fill="#243026" stroke="#f5c76c" strokeWidth="1.5" />
                 <circle cx="120" cy="205" r="7" fill="url(#cyberGold)" />
 
-                {/* Handles / Cyber Wings */}
+                {/* Handles / Botanical Laurel Curve */}
                 <path d="M 68,95 C 35,95 32,155 72,175" fill="none" stroke="url(#cyberNeon)" strokeWidth="6" strokeLinecap="round" />
                 <path d="M 172,95 C 205,95 208,155 168,175" fill="none" stroke="url(#cyberNeon)" strokeWidth="6" strokeLinecap="round" />
 
                 {/* Cup Body */}
-                <path d="M 65,85 L 175,85 L 160,170 C 145,200 95,200 80,170 Z" fill="url(#cyberGold)" stroke="#ffe066" strokeWidth="2" />
-                <path d="M 78,92 L 162,92 L 152,160 C 140,185 100,185 88,160 Z" fill="#ffb703" opacity="0.6" />
+                <path d="M 65,85 L 175,85 L 160,170 C 145,200 95,200 80,170 Z" fill="url(#cyberGold)" stroke="#f7d488" strokeWidth="2" />
+                <path d="M 78,92 L 162,92 L 152,160 C 140,185 100,185 88,160 Z" fill="#e5b85a" opacity="0.6" />
 
                 {/* Center Star on Cup */}
                 <g transform="translate(120, 132)">
                   <polygon points="0,-20 5,-5 20,-5 8,4 12,18 0,9 -12,18 -8,4 -20,-5 -5,-5" fill="#ffffff" />
-                  <polygon points="0,-16 4,-4 16,-4 7,3 10,14 0,7 -10,14 -7,3 -16,-4 -4,-4" fill="#00f0ff" />
+                  <polygon points="0,-16 4,-4 16,-4 7,3 10,14 0,7 -10,14 -7,3 -16,-4 -4,-4" fill="#47774d" />
                 </g>
 
-                {/* Cyber Sparks */}
-                <circle cx="50" cy="70" r="3" fill="#00ff88" />
-                <circle cx="190" cy="65" r="3.5" fill="#00f0ff" />
-                <circle cx="40" cy="180" r="2.5" fill="#00f0ff" />
-                <circle cx="200" cy="190" r="2.5" fill="#00ff88" />
-                <circle cx="120" cy="45" r="4" fill="#ffd700" />
+                {/* Warm Leaf / Sparkle Accents */}
+                <circle cx="50" cy="70" r="3" fill="#88b78f" />
+                <circle cx="190" cy="65" r="3.5" fill="#f5c76c" />
+                <circle cx="40" cy="180" r="2.5" fill="#88b78f" />
+                <circle cx="200" cy="190" r="2.5" fill="#f5c76c" />
+                <circle cx="120" cy="45" r="4" fill="#f5c76c" />
               </svg>
             )}
           </div>
@@ -206,7 +206,7 @@ export default function WishesStep({ userName, person, onNext }) {
       {/* Button to Next Step */}
       <div className="wishes-action">
         <button onClick={onNext} className="btn-sweet-primary">
-          <span>Lanjut Tiup Lilin 🕯️</span>
+          <span>Buka Kado Spesial 🎁</span>
         </button>
       </div>
     </div>

@@ -43,7 +43,9 @@ export default function QATestingPanel({
       setAuthError(false)
       try {
         sessionStorage.setItem('qa_panel_auth', 'true')
-      } catch {}
+      } catch (err) {
+        console.warn('SessionStorage unavailable', err)
+      }
     } else {
       setAuthError(true)
     }
@@ -54,14 +56,16 @@ export default function QATestingPanel({
     setAuthInput('')
     try {
       sessionStorage.removeItem('qa_panel_auth')
-    } catch {}
+    } catch (err) {
+      console.warn('SessionStorage unavailable', err)
+    }
   }
 
   const STEPS = [
     { id: 'select', label: '1. Select Person', icon: '👥' },
-    { id: 'gift', label: '2. Gift Box', icon: '🎁' },
+    { id: 'candle', label: '2. Blow Candle', icon: '🕯️' },
     { id: 'wishes', label: '3. Wishes & Note', icon: '💌' },
-    { id: 'candle', label: '4. Blow Candle', icon: '🕯️' },
+    { id: 'gift', label: '4. Gift Box', icon: '🎁' },
     { id: 'closing', label: '5. Closing Note', icon: '✉️' },
   ]
 

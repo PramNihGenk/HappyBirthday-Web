@@ -89,7 +89,7 @@ export default function CandleStep({ userName, person, onNext }) {
           </button>
         ) : (
           <button onClick={onNext} className="btn-sweet-primary">
-            <span>Buka Dari Gua ✉</span>
+            <span>Lanjut ke Doa & Harapan 💌</span>
           </button>
         )}
       </div>

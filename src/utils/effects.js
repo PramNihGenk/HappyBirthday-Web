@@ -108,3 +108,78 @@ export function triggerConfetti() {
     }, i * 25)
   }
 }
+
+// ----------------------------------------------------
+// Ambient Lo-fi Music Box Melody Generator
+// ----------------------------------------------------
+let bgmInterval = null
+let bgmIsPlaying = false
+
+export function isBGMPlaying() {
+  return bgmIsPlaying
+}
+
+export function startAmbientBGM(onStateChange = null) {
+  const ctx = getAudioCtx()
+  if (!ctx) return false
+  if (bgmIsPlaying) return true
+
+  bgmIsPlaying = true
+  if (onStateChange) onStateChange(true)
+
+  // Calming celebratory music box pattern: C major pentatonic notes
+  // C4, D4, E4, G4, A4, C5, D5, E5, G5
+  const notes = [
+    523.25, 659.25, 783.99, 1046.50, // C5, E5, G5, C6
+    587.33, 698.46, 880.00, 1174.66, // D5, F5, A5, D6
+    659.25, 783.99, 987.77, 1318.51, // E5, G5, B5, E6
+    523.25, 783.99, 1046.50, 1567.98 // C5, G5, C6, G6
+  ]
+  let noteIdx = 0
+
+  const playNextNote = () => {
+    if (!bgmIsPlaying) return
+    const freq = notes[noteIdx % notes.length]
+    noteIdx++
+
+    const now = ctx.currentTime
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(freq, now)
+
+    // Soft music-box bell envelope
+    gain.gain.setValueAtTime(0.045, now)
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2)
+
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+
+    osc.start(now)
+    osc.stop(now + 1.2)
+  }
+
+  playNextNote()
+  bgmInterval = setInterval(playNextNote, 620)
+  return true
+}
+
+export function stopAmbientBGM(onStateChange = null) {
+  bgmIsPlaying = false
+  if (bgmInterval) {
+    clearInterval(bgmInterval)
+    bgmInterval = null
+  }
+  if (onStateChange) onStateChange(false)
+}
+
+export function toggleAmbientBGM(onStateChange = null) {
+  if (bgmIsPlaying) {
+    stopAmbientBGM(onStateChange)
+    return false
+  } else {
+    return startAmbientBGM(onStateChange)
+  }
+}
+

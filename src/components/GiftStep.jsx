@@ -66,8 +66,8 @@ export default function GiftStep({ userName, person, onOpen }) {
           {isOpening
             ? 'Membuka Kado... 🎉'
             : isMale
-              ? 'Buka Kadonya ⚡'
-              : 'Buka Kadonya 🎀'}
+              ? 'Buka Kadonya 🍃'
+              : 'Buka Kadonya 🌸'}
         </span>
       </button>
     </div>

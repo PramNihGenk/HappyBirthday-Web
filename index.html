@@ -6,6 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Spesial Buat Kamu ✨</title>
     <meta name="description" content="Sebuah web kado ulang tahun manis untuk sahabat baik." />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      try {
+        const stored = localStorage.getItem("color-scheme");
+        const meta = document.querySelector('meta[name="color-scheme"]');
+        if (stored === "dark" || stored === "light") {
+          if (meta) meta.content = stored;
+          document.documentElement.setAttribute("data-color-mode", stored);
+        } else {
+          if (meta) meta.content = "light dark";
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.setAttribute("data-color-mode", prefersDark ? "dark" : "light");
+        }
+      } catch {}
+    </script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
