@@ -1,4 +1,4 @@
-export const MAX_PEOPLE = 9;
+export const MAX_PEOPLE = 12;
 
 export const QA_PASSWORDS = ['pram', 'pram2026'];
 
@@ -18,6 +18,9 @@ export const PEOPLE = [
   { id: 7, name: 'Caca', birthday: { day: 13, month: 8 }, birthYear: 2010, gender: 'female', emoji: '🎀' },
   { id: 8, name: 'Lyly', birthday: { day: 2, month: 8 }, birthYear: 2011, gender: 'female', emoji: '🦋' },
   { id: 9, name: 'Almas', birthday: { day: 20, month: 5 }, birthYear: 2008, gender: 'male', emoji: '👑' },
+  { id: 10, name: 'Xora', birthday: { day: 13, month: 8 }, birthYear: 2008, gender: 'male', emoji: '🗡️' },
+  { id: 11, name: 'Ara', birthday: { day: 20, month: 8 }, birthYear: 2012, gender: 'female', emoji: '🌺' },
+  { id: 12, name: 'Bebek', birthday: { day: 12, month: 3 }, birthYear: 2008, gender: 'male', emoji: '🦆' },
 ];
 
 export function isBirthdayToday(person, mockDate = null) {

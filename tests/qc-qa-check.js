@@ -26,16 +26,16 @@ console.log('       🧪 SURPRISEWEB QA & QC AUTOMATED TEST RUNNER     ')
 console.log('=======================================================\x1b[0m\n')
 
 // ----------------------------------------------------
-// SUITE 1: DATA INTEGRITY (9 FRIENDS)
+// SUITE 1: DATA INTEGRITY (12 FRIENDS)
 // ----------------------------------------------------
-console.log('\x1b[33m[SUITE 1: Data Integrity & 9 Sahabat Validation]\x1b[0m')
+console.log('\x1b[33m[SUITE 1: Data Integrity & 12 Sahabat Validation]\x1b[0m')
 
-assert(PEOPLE.length === 9, 'TC-001: Total Friends Count', `Expected 9 people, got ${PEOPLE.length}`)
-assert(MAX_PEOPLE === 9, 'TC-002: MAX_PEOPLE Constant', `Expected 9, got ${MAX_PEOPLE}`)
+assert(PEOPLE.length === 12, 'TC-001: Total Friends Count', `Expected 12 people, got ${PEOPLE.length}`)
+assert(MAX_PEOPLE === 12, 'TC-002: MAX_PEOPLE Constant', `Expected 12, got ${MAX_PEOPLE}`)
 
 const currentNames = PEOPLE.map(p => p.name)
-const has9ValidFriends = PEOPLE.length === 9 && currentNames.includes('Bindut') && currentNames.includes('Aceng')
-assert(has9ValidFriends, 'TC-003: All Required 9 Friends Present', `Names: ${currentNames.join(', ')}`)
+const has12ValidFriends = PEOPLE.length === 12 && currentNames.includes('Bindut') && currentNames.includes('Aceng') && currentNames.includes('Xora') && currentNames.includes('Ara') && currentNames.includes('Bebek')
+assert(has12ValidFriends, 'TC-003: All Required 12 Friends Present', `Names: ${currentNames.join(', ')}`)
 
 PEOPLE.forEach((p, idx) => {
   const hasId = typeof p.id === 'number'
