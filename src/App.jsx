@@ -9,6 +9,7 @@ import CandleStep from './components/CandleStep'
 import ClosingStep from './components/ClosingStep'
 import QATestingPanel from './components/QATestingPanel'
 import SettingsModal from './components/SettingsModal'
+import GuestbookModal from './components/GuestbookModal'
 import SplashScreen from './components/SplashScreen'
 
 const STEPS = ['select', 'candle', 'wishes', 'gift', 'closing']
@@ -20,6 +21,7 @@ export default function App() {
   const [mobileTab, setMobileTab] = useState('stage') // 'stage' | 'circle' | 'console'
   const [maxUnlockedIndex, setMaxUnlockedIndex] = useState(0)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isGuestbookOpen, setIsGuestbookOpen] = useState(false)
   const [particlesEnabled, setParticlesEnabled] = useState(true)
   const [showSplash, setShowSplash] = useState(true)
 
@@ -183,6 +185,7 @@ export default function App() {
           currentStep={currentStep}
           stepIndex={stepIndex}
           steps={STEPS}
+          onOpenGuestbook={() => setIsGuestbookOpen(true)}
           theme={theme}
           selectedPerson={selectedPerson}
           mockDate={mockDate}
@@ -300,6 +303,13 @@ export default function App() {
       </div>
 
       {/* Settings Modal (Theme, Audio, Visuals) */}
+      <GuestbookModal
+        isOpen={isGuestbookOpen}
+        onClose={() => setIsGuestbookOpen(false)}
+        selectedPerson={selectedPerson}
+        mockDate={mockDate}
+      />
+
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

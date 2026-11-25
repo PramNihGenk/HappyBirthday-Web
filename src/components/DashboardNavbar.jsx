@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { triggerConfetti, toggleAmbientBGM, isBGMPlaying } from '../utils/effects'
 
 export default function DashboardNavbar({
@@ -14,10 +14,32 @@ export default function DashboardNavbar({
   resolvedMode = 'light',
   onToggleColorMode,
   onOpenSettings,
+  onOpenGuestbook,
 }) {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [bgmActive, setBgmActive] = useState(isBGMPlaying())
   const [confettiBlasts, setConfettiBlasts] = useState(0)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const menuRef = useRef(null)
+
+  // Close dropdown on outside click or Escape
+  useEffect(() => {
+    if (!isMenuOpen) return
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsMenuOpen(false)
+      }
+    }
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsMenuOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isMenuOpen])
 
   // Live real-time clock
   useEffect(() => {
@@ -129,40 +151,6 @@ export default function DashboardNavbar({
 
       {/* Action Controls */}
       <div className="navbar-actions">
-        {/* Ambient BGM button */}
-        <button
-          type="button"
-          onClick={handleToggleBgm}
-          className={`nav-action-btn ${bgmActive ? 'is-playing' : ''}`}
-          title={bgmActive ? 'Matikan Musik Ambient' : 'Nyalakan Musik Ambient'}
-        >
-          <span className="nav-btn-icon">{bgmActive ? '🎵' : '🔇'}</span>
-          <span className="nav-btn-label">
-            {bgmActive ? 'Music On' : 'Music Off'}
-          </span>
-          {bgmActive && (
-            <span className="equalizer-bars" aria-hidden="true">
-              <span className="bar b1" />
-              <span className="bar b2" />
-              <span className="bar b3" />
-            </span>
-          )}
-        </button>
-
-        {/* Quick Confetti Launcher */}
-        <button
-          type="button"
-          onClick={handleConfetti}
-          className="nav-action-btn confetti-btn"
-          title="Tembakkan Confetti Perayaan!"
-        >
-          <span className="nav-btn-icon">🎉</span>
-          <span className="nav-btn-label">Confetti</span>
-          {confettiBlasts > 0 && (
-            <span className="blast-counter">{confettiBlasts}</span>
-          )}
-        </button>
-
         {/* Quick Dark / Light Mode Toggle Button */}
         <button
           type="button"
@@ -177,18 +165,6 @@ export default function DashboardNavbar({
           <span className="nav-btn-label">
             {resolvedMode === 'dark' ? 'Terang' : 'Gelap'}
           </span>
-        </button>
-
-        {/* Settings Button */}
-        <button
-          type="button"
-          onClick={onOpenSettings}
-          className="nav-action-btn settings-btn"
-          title="Buka Pengaturan Tampilan & Audio"
-          aria-label="Pengaturan"
-        >
-          <span className="nav-btn-icon">⚙️</span>
-          <span className="nav-btn-label">Pengaturan</span>
         </button>
 
         {/* Theme Indicator */}
@@ -210,6 +186,90 @@ export default function DashboardNavbar({
             <span>🔄 Menu</span>
           </button>
         )}
+
+        {/* Dropdown Menu (Music, Confetti, Pengaturan, Ucapan) */}
+        <div className="nav-dropdown-wrapper" ref={menuRef}>
+          <button
+            type="button"
+            className={`nav-action-btn nav-dropdown-trigger ${isMenuOpen ? 'is-open' : ''}`}
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            aria-expanded={isMenuOpen}
+            aria-haspopup="menu"
+            title="Menu Aksi & Ucapan"
+          >
+            <span className="nav-btn-icon">☰</span>
+            <span className="nav-btn-label">Menu</span>
+            <span className="nav-dropdown-chevron" aria-hidden="true">▾</span>
+          </button>
+
+          {isMenuOpen && (
+            <div className="nav-dropdown-menu" role="menu">
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  handleToggleBgm()
+                }}
+                className={`nav-dropdown-item ${bgmActive ? 'is-active' : ''}`}
+              >
+                <span className="nav-btn-icon">{bgmActive ? '🎵' : '🔇'}</span>
+                <span className="nav-dropdown-label">
+                  {bgmActive ? 'Music On' : 'Music Off'}
+                </span>
+                {bgmActive && (
+                  <span className="equalizer-bars" aria-hidden="true">
+                    <span className="bar b1" />
+                    <span className="bar b2" />
+                    <span className="bar b3" />
+                  </span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  handleConfetti()
+                }}
+                className="nav-dropdown-item"
+              >
+                <span className="nav-btn-icon">🎉</span>
+                <span className="nav-dropdown-label">Confetti</span>
+                {confettiBlasts > 0 && (
+                  <span className="blast-counter">{confettiBlasts}</span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setIsMenuOpen(false)
+                  onOpenGuestbook && onOpenGuestbook()
+                }}
+                className="nav-dropdown-item"
+              >
+                <span className="nav-btn-icon">💬</span>
+                <span className="nav-dropdown-label">Ucapan Ulang Tahun</span>
+              </button>
+
+              <div className="nav-dropdown-divider" />
+
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setIsMenuOpen(false)
+                  onOpenSettings && onOpenSettings()
+                }}
+                className="nav-dropdown-item"
+              >
+                <span className="nav-btn-icon">⚙️</span>
+                <span className="nav-dropdown-label">Pengaturan</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   )
