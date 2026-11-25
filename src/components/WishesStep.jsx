@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { fetchWishes, createWish, isSupabaseConfigured } from '../lib/supabase'
 
 export default function WishesStep({ userName, person, onNext }) {
   const isMale = person?.gender === 'male'
@@ -23,6 +24,12 @@ export default function WishesStep({ userName, person, onNext }) {
   const lines = isMale ? maleLines : femaleLines
 
   const [visibleLineCount, setVisibleLineCount] = useState(1)
+  const [wishes, setWishes] = useState([])
+  const [loadingWishes, setLoadingWishes] = useState(false)
+  const [senderName, setSenderName] = useState('')
+  const [messageText, setMessageText] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [wishError, setWishError] = useState('')
 
   useEffect(() => {
     if (visibleLineCount < lines.length) {
@@ -32,6 +39,57 @@ export default function WishesStep({ userName, person, onNext }) {
       return () => clearTimeout(timer)
     }
   }, [visibleLineCount, lines.length])
+
+  useEffect(() => {
+    if (!person?.id || !isSupabaseConfigured) return
+    let cancelled = false
+    setLoadingWishes(true)
+    setWishError('')
+    fetchWishes(person.id)
+      .then((data) => {
+        if (!cancelled) setWishes(data)
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          console.error('Gagal memuat ucapan:', err)
+          setWishError('Gagal memuat ucapan dari server.')
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingWishes(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [person?.id])
+
+  const handleSubmitWish = async (e) => {
+    e.preventDefault()
+    const cleanName = senderName.trim()
+    const cleanMsg = messageText.trim()
+    if (!cleanName || !cleanMsg) {
+      setWishError('Nama dan ucapan tidak boleh kosong ya!')
+      return
+    }
+    if (!person?.id) return
+
+    setSubmitting(true)
+    setWishError('')
+    try {
+      const inserted = await createWish({
+        recipientId: person.id,
+        senderName: cleanName,
+        message: cleanMsg,
+      })
+      setWishes((prev) => [inserted, ...prev])
+      setMessageText('')
+    } catch (err) {
+      console.error('Gagal mengirim ucapan:', err)
+      setWishError('Gagal mengirim ucapan. Coba lagi sebentar ya!')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   return (
     <div className="step-card wishes-wrapper">
@@ -200,6 +258,72 @@ export default function WishesStep({ userName, person, onNext }) {
           <span className="visual-gift-caption">
             {!isMale ? 'Buket bunga virtual khusus buat kamu 💐' : 'Trophy kehormatan khusus buat lu 🏆'}
           </span>
+        </div>
+      </div>
+
+      {/* Guestbook / Papan Ucapan Teman */}
+      <div className="guestbook-section">
+        <div className="guestbook-header">
+          <h3>💬 Papan Ucapan Teman ({wishes.length})</h3>
+          <p>Tulis doa atau ucapan spesial buat {displayName} biar bisa dibaca bareng-bareng!</p>
+        </div>
+
+        <form className="guestbook-form" onSubmit={handleSubmitWish}>
+          <div className="guestbook-inputs">
+            <input
+              type="text"
+              className="guestbook-input"
+              placeholder="Nama kamu..."
+              maxLength={60}
+              value={senderName}
+              onChange={(e) => setSenderName(e.target.value)}
+              disabled={submitting}
+            />
+            <textarea
+              className="guestbook-textarea"
+              placeholder={`Tulis ucapan buat ${displayName}...`}
+              maxLength={500}
+              rows={2}
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+              disabled={submitting}
+            />
+          </div>
+          {wishError && <p className="guestbook-error">{wishError}</p>}
+          <button
+            type="submit"
+            className="btn-sweet-secondary guestbook-submit"
+            disabled={submitting || !senderName.trim() || !messageText.trim()}
+          >
+            {submitting ? 'Mengirim...' : 'Kirim Ucapan 💌'}
+          </button>
+        </form>
+
+        <div className="guestbook-list">
+          {loadingWishes ? (
+            <p className="guestbook-empty">Memuat ucapan teman-teman...</p>
+          ) : wishes.length === 0 ? (
+            <p className="guestbook-empty">
+              Belum ada ucapan nih. Jadilah yang pertama ngucapin buat {displayName}! ✨
+            </p>
+          ) : (
+            wishes.map((w) => (
+              <div key={w.id} className="guestbook-item">
+                <div className="guestbook-item-header">
+                  <strong className="guestbook-sender">{w.sender_name}</strong>
+                  <span className="guestbook-time">
+                    {new Date(w.created_at).toLocaleDateString('id-ID', {
+                      day: 'numeric',
+                      month: 'short',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </span>
+                </div>
+                <p className="guestbook-message">{w.message}</p>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

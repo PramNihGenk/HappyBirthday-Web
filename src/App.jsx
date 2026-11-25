@@ -9,6 +9,7 @@ import CandleStep from './components/CandleStep'
 import ClosingStep from './components/ClosingStep'
 import QATestingPanel from './components/QATestingPanel'
 import SettingsModal from './components/SettingsModal'
+import SplashScreen from './components/SplashScreen'
 
 const STEPS = ['select', 'candle', 'wishes', 'gift', 'closing']
 
@@ -20,6 +21,7 @@ export default function App() {
   const [maxUnlockedIndex, setMaxUnlockedIndex] = useState(0)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [particlesEnabled, setParticlesEnabled] = useState(true)
+  const [showSplash, setShowSplash] = useState(true)
 
   // Color scheme state: 'system' | 'light' | 'dark'
   const [colorMode, setColorMode] = useState(() => {
@@ -161,6 +163,7 @@ export default function App() {
 
   return (
     <div className="sweet-app" data-theme={theme} data-color-mode={resolvedMode}>
+      {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
       {/* Background ambient glows */}
       <div className="ambient-glow glow-top" />
       <div className="ambient-glow glow-bottom" />
@@ -214,7 +217,7 @@ export default function App() {
             className={`dash-tab-btn ${mobileTab === 'circle' ? 'is-active' : ''}`}
             onClick={() => setMobileTab('circle')}
           >
-            <span>👥 Circle (9)</span>
+            <span>👥 Circle (12)</span>
           </button>
           <button
             type="button"
@@ -234,6 +237,10 @@ export default function App() {
             <DashboardSidebarLeft
               selectedPerson={selectedPerson}
               onSelectPerson={handleSelectPerson}
+              onHighlightPerson={(person) => {
+                // Only highlight/preview — do NOT navigate to surprise steps
+                setSelectedPerson(person)
+              }}
               mockDate={mockDate}
               currentStep={currentStep}
             />

@@ -3,6 +3,7 @@ import { PEOPLE, isBirthdayToday, getBirthdayString, getAge } from '../data/peop
 export default function DashboardSidebarLeft({
   selectedPerson,
   onSelectPerson,
+  onHighlightPerson,
   mockDate,
 }) {
   const targetDate = mockDate ? new Date(mockDate) : new Date()
@@ -91,7 +92,7 @@ export default function DashboardSidebarLeft({
       <div className="dash-card circle-roster-card">
         <div className="card-mini-header">
           <span className="mini-icon">👥</span>
-          <span className="mini-title">FEYEPE AREA (9)</span>
+          <span className="mini-title">FEYEPE AREA (12)</span>
           <span className="roster-count-badge">Terverifikasi</span>
         </div>
 
@@ -106,10 +107,10 @@ export default function DashboardSidebarLeft({
               <div
                 key={person.id}
                 className={`roster-item ${person.isToday ? 'is-today' : ''} ${isSelected ? 'is-selected' : ''}`}
-                onClick={() => onSelectPerson(person)}
+                onClick={() => onHighlightPerson ? onHighlightPerson(person) : undefined}
                 role="button"
                 tabIndex={0}
-                title={`Klik untuk membuka atau intip ${person.name}`}
+                title={`Info ${person.name}`}
               >
                 <div className="roster-avatar-box">
                   <span className="roster-emoji">{person.emoji}</span>
@@ -138,7 +139,7 @@ export default function DashboardSidebarLeft({
       <div className="dash-card circle-stats-card">
         <div className="stats-grid">
           <div className="stat-box">
-            <span className="stat-num">9</span>
+            <span className="stat-num">12</span>
             <span className="stat-label">People</span>
           </div>
           <div className="stat-box">

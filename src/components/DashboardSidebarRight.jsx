@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { getBirthdayString, getAge } from '../data/people'
+import GuestbookWidget from './GuestbookWidget'
 import {
   playGiftOpenSound,
   playBlowSound,
@@ -240,6 +241,9 @@ export default function DashboardSidebarRight({
           <footer className="quote-author">— {currentQuote.author}</footer>
         </blockquote>
       </div>
+
+      {/* Widget 3.5: Papan Ucapan Teman */}
+      <GuestbookWidget selectedPerson={selectedPerson} mockDate={mockDate} />
 
       {/* Widget 4: Creator Signature */}
       <div className="dash-card creator-note-card">

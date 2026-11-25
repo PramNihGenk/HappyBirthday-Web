@@ -216,7 +216,7 @@ export default function QATestingPanel({
                     </div>
 
                     <div className="qa-section-title" style={{ marginTop: '1.2rem' }}>
-                      <span>👥 Ganti Target Sahabat (9 Orang)</span>
+                      <span>👥 Ganti Target Sahabat (12 Orang)</span>
                     </div>
                     <p className="qa-hint-text">
                       Pilih salah satu teman untuk langsung menguji tema (Pink/Dark Cyan) & data:
